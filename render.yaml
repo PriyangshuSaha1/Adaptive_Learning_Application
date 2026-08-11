@@ -1,0 +1,38 @@
+services:
+  # Node.js Backend
+  - type: web
+    name: adaptive-learning-backend
+    env: node
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && node server.js"
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: ML_SERVICE_URL
+        sync: false
+
+  # Python ML Service
+  - type: web
+    name: adaptive-learning-ml
+    env: python
+    buildCommand: "cd ml && pip install -r requirements.txt"
+    startCommand: "cd ml && uvicorn src.app:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
+      - key: GROQ_API_KEY
+        sync: false
