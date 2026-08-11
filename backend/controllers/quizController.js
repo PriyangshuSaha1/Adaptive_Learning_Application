@@ -9,7 +9,7 @@ const { generateRecommendations } = require("../services/recommendationService")
 /*   --- START QUIZ ---*/
 exports.startQuiz = async (req, res) => {
   try {
-    const { subject, topic } = req.body;
+    const { subject, topic, questionCount = 10 } = req.body;
 
     if (!subject || !topic) {
       return res.status(400).json({
@@ -41,7 +41,7 @@ exports.startQuiz = async (req, res) => {
           _id: { $nin: attemptedIds },
         },
       },
-      { $sample: { size: 10 } },
+      { $sample: { size: Number(questionCount) } },
     ]);
 
     if (questions.length === 0) {
@@ -52,7 +52,7 @@ exports.startQuiz = async (req, res) => {
             topic: { $regex: new RegExp(`^${topic}$`, "i") },
           },
         },
-        { $sample: { size: 10 } },
+        { $sample: { size: Number(questionCount) } },
       ]);
     }
 
@@ -63,12 +63,12 @@ exports.startQuiz = async (req, res) => {
             subject: { $regex: new RegExp(`^${subject}$`, "i") },
           },
         },
-        { $sample: { size: 10 } },
+        { $sample: { size: Number(questionCount) } },
       ]);
     }
 
     if (questions.length === 0) {
-      questions = await Question.aggregate([{ $sample: { size: 10 } }]);
+      questions = await Question.aggregate([{ $sample: { size: Number(questionCount) } }]);
     }
 
     res.status(200).json({

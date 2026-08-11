@@ -57,8 +57,8 @@ const Quiz = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Webcam toggle state (default: disabled, will be set based on verification)
   const [webcamEnabled, setWebcamEnabled] = useState(false);
+  const [questionCount, setQuestionCount] = useState(10);
   const [verificationCompleted, setVerificationCompleted] = useState(false);
   const [verificationSkipped, setVerificationSkipped] = useState(false);
   
@@ -223,6 +223,7 @@ const Quiz = () => {
           subject: selectedSubject,
           topic: selectedTopic,
           verificationData: verificationData,
+          questionCount: questionCount
         }),
       });
       const data = await res.json();
@@ -447,6 +448,32 @@ const Quiz = () => {
                           {selectedTopic === t ? "Selected ✓" : "Tap to select"}
                         </span>
                       </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Question Count Selector ── */}
+              {selectedTopic && (
+                <div className="question-count-selector" style={{ marginTop: 30, marginBottom: 20 }}>
+                  <p className="topics-section-heading" style={{ marginBottom: 14 }}>Number of Questions</p>
+                  <div style={{ display: 'flex', gap: '15px' }}>
+                    {[5, 10, 15].map((num) => (
+                      <button
+                        key={num}
+                        onClick={() => setQuestionCount(num)}
+                        style={{
+                          padding: '10px 20px',
+                          borderRadius: '8px',
+                          border: questionCount === num ? '2px solid var(--accent)' : '1px solid #ccc',
+                          background: questionCount === num ? 'rgba(var(--accent-rgb), 0.1)' : 'transparent',
+                          color: questionCount === num ? 'var(--accent)' : 'inherit',
+                          cursor: 'pointer',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        {num}
+                      </button>
                     ))}
                   </div>
                 </div>
