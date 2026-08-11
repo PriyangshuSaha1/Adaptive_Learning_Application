@@ -16,8 +16,9 @@ body {
 
 /* ================= GRID ================= */
 .team-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 35px;
   max-width: 1700px;
   margin: 0 auto;
