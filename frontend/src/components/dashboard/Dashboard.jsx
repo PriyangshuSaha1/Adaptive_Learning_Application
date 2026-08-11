@@ -71,6 +71,7 @@ const Dashboard = () => {
     Math:"🧮", Physics:"⚛️", Chemistry:"🧪", Biology:"🧬",
     AI:"🤖", CS:"💻", English:"📚", CN:"🌐",
     OS:"💾", DBMS:"🗄️", SE:"🛠️", default:"📝",
+    JEE:"📐", NEET:"🩺", "Class 12":"🎓", "Class 10":"🎒"
   };
 
   return (

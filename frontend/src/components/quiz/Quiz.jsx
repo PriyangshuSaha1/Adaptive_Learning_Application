@@ -35,6 +35,10 @@ const SUBJECT_META = {
   programming: { emoji: "⌨️", bg: "#6366f1", light: "rgba(99,102,241,0.15)" },
   economics: { emoji: "📊", bg: "#f97316", light: "rgba(249,115,22,0.15)" },
   psychology: { emoji: "🧠", bg: "#a855f7", light: "rgba(168,85,247,0.15)" },
+  jee: { emoji: "📐", bg: "#f43f5e", light: "rgba(244,63,94,0.15)" },
+  neet: { emoji: "🩺", bg: "#0ea5e9", light: "rgba(14,165,233,0.15)" },
+  "class 12": { emoji: "🎓", bg: "#8b5cf6", light: "rgba(139,92,246,0.15)" },
+  "class 10": { emoji: "🎒", bg: "#10b981", light: "rgba(16,185,129,0.15)" },
 };
 
 const getSubjectMeta = (name = "") => {
