@@ -36,7 +36,7 @@ const TeamSection = () => {
         </a>
 
         <p className="contact-info">
-          Email: info@edusip.com | Phone: +91 98765 43210
+          Email: info@edusip.com | Phone: +91 62910 78250
         </p>
       </div>
 
