@@ -16,10 +16,10 @@ const questionSchema = new mongoose.Schema({
             validator: function (v) {
                 return v.length === 4;
             },
-            message: "A question must have exactly 4 options"
         }
     },
-    correctAnswer: { type: Number, required: true, min: 0, max: 3 }
+    correctAnswer: { type: Number, required: true, min: 0, max: 3 },
+    explanation: { type: String }
 
 }, { timestamps: true });
 

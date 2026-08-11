@@ -154,6 +154,16 @@ const QuizReview = () => {
                     </div>
                   </div>
                 )}
+                
+                {/* Instant Database AI Explanation for wrong answers */}
+                {!response?.isCorrect && q.explanation && !explanations[q.questionId] && (
+                  <div className="explanation-box static-explanation">
+                    <h4>🤖 AI Solution</h4>
+                    <div className="explanation-text">
+                      {q.explanation}
+                    </div>
+                  </div>
+                )}
 
               </div>
             );
