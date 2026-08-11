@@ -7,38 +7,8 @@ const TeamSection = () => {
       name: "Priyangshu Saha",
       roll: "23051446",
       email: "23051446@kiit.ac.in",
-      role: "AI/ML",
-    },
-    {
-      name: "Saarnab Bishayee",
-      roll: "23051457",
-      email: "23051457@kiit.ac.in",
-      role: "AI/ML",
-    },
-    {
-      name: "Akashdeep Sengupta",
-      roll: "23052862",
-      email: "23052862@kiit.ac.in",
-      role: "Anti-Cheat",
-    },
-    {
-      name: "Trayambak Sarkar",
-      roll: "23052443",
-      email: "23052443@kiit.ac.in",
-      role: "Frontend",
-    },
-    {
-      name: "Shubham Chaudhary",
-      roll: "23053304",
-      email: "23053304@kiit.ac.in",
-      role: "Frontend",
-    },
-    {
-      name: "Shubhayan Bhattacharjee",
-      roll: "2305574",
-      email: "2305574@kiit.ac.in",
-      role: "Full Stack",
-    },
+      role: "Full Stack, AI/ML",
+    }
   ];
 
   return (

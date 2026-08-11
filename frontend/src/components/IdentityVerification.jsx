@@ -102,7 +102,7 @@ const IdentityVerification = ({ onVerificationComplete, onClose }) => {
       const photo = capturePhoto();
       if (photo) {
         setUserPhoto(photo);
-        setCurrentStep('id');
+        setCurrentStep('microphone');
       }
     } catch (error) {
       console.error('Error capturing user photo:', error);
@@ -178,11 +178,11 @@ const IdentityVerification = ({ onVerificationComplete, onClose }) => {
             <span>Photo Capture</span>
           </div>
           
-          <div className={`step ${idPhoto ? 'completed' : ''} ${currentStep === 'id' ? 'active' : ''}`}>
+          <div className={`step ${micPermission ? 'completed' : ''} ${currentStep === 'microphone' ? 'active' : ''}`}>
             <div className="step-icon">
-              {idPhoto ? <Check /> : <CreditCard />}
+              {micPermission ? <Check /> : <AlertCircle />}
             </div>
-            <span>ID Verification</span>
+            <span>Microphone</span>
           </div>
         </div>
 
