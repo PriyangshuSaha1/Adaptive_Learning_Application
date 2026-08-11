@@ -1,11 +1,23 @@
+import sys
+import os
+
+# Fix: allow running as a module OR directly with uvicorn
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR  = os.path.dirname(os.path.abspath(__file__))
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import joblib
 import json
-import os
-from tensorflow.keras.models import load_model
-from .groq_service import ask_llm
+from dotenv import load_dotenv
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+from groq_service import ask_llm
 
 app = FastAPI()
 app.add_middleware(
@@ -197,7 +209,7 @@ Keep it:
 @app.get("/ml-metrics")
 def ml_metrics():
     try:
-        path = "metrics/ml_metrics.json"
+        path = os.path.join(BASE_DIR, "metrics", "ml_metrics.json")
 
         if not os.path.exists(path):
             raise HTTPException(
@@ -218,7 +230,7 @@ def ml_metrics():
 @app.get("/dl-metrics")
 def dl_metrics():
     try:
-        path = "metrics/dl_metrics.json"
+        path = os.path.join(BASE_DIR, "metrics", "dl_metrics.json")
 
         if not os.path.exists(path):
             raise HTTPException(
