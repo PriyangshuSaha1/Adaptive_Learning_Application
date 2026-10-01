@@ -32,44 +32,59 @@ exports.startQuiz = async (req, res) => {
       })
       .filter(Boolean);
 
-    let questions = await Question.aggregate([
+    let needed = Number(questionCount);
+    let questions = [];
+
+    // 1. Try to get easy questions first
+    let easyQs = await Question.aggregate([
       {
         $match: {
-          subject: { $regex: new RegExp(`^${subject}$`, "i") },
-          topic: { $regex: new RegExp(`^${topic}$`, "i") },
+          subject: { $regex: new RegExp('^' + subject + '$', "i") },
+          topic: { $regex: new RegExp('^' + topic + '$', "i") },
           difficulty: { $regex: /^easy$/i },
           _id: { $nin: attemptedIds },
         },
       },
-      { $sample: { size: Number(questionCount) } },
+      { $sample: { size: needed } },
     ]);
 
-    if (questions.length === 0) {
-      questions = await Question.aggregate([
+    questions.push(...easyQs);
+    needed -= easyQs.length;
+
+    // 2. Fallback to ANY difficulty for the SAME subject & topic
+    if (needed > 0) {
+      const fetchedIds = questions.map(q => q._id);
+      let moreQs = await Question.aggregate([
         {
           $match: {
-            subject: { $regex: new RegExp(`^${subject}$`, "i") },
-            topic: { $regex: new RegExp(`^${topic}$`, "i") },
+            subject: { $regex: new RegExp('^' + subject + '$', "i") },
+            topic: { $regex: new RegExp('^' + topic + '$', "i") },
+            _id: { $nin: [...attemptedIds, ...fetchedIds] },
           },
         },
-        { $sample: { size: Number(questionCount) } },
+        { $sample: { size: needed } },
       ]);
+      questions.push(...moreQs);
+      needed -= moreQs.length;
     }
 
-    if (questions.length === 0) {
-      questions = await Question.aggregate([
+    // 3. Fallback to SAME subject, ANY topic
+    if (needed > 0) {
+      const fetchedIds = questions.map(q => q._id);
+      let moreQs = await Question.aggregate([
         {
           $match: {
-            subject: { $regex: new RegExp(`^${subject}$`, "i") },
+            subject: { $regex: new RegExp('^' + subject + '$', "i") },
+            _id: { $nin: [...attemptedIds, ...fetchedIds] },
           },
         },
-        { $sample: { size: Number(questionCount) } },
+        { $sample: { size: needed } },
       ]);
+      questions.push(...moreQs);
+      needed -= moreQs.length;
     }
 
-    if (questions.length === 0) {
-      questions = await Question.aggregate([{ $sample: { size: Number(questionCount) } }]);
-    }
+    // 4. Removed ultimate fallback so we do NOT mix subjects
 
     res.status(200).json({
       success: true,
@@ -129,7 +144,7 @@ exports.getTopicsBySubject = async (req, res) => {
 ===================================================== */
 exports.submitAnswer = async (req, res) => {
   try {
-    const { questionId, selectedAnswer, timeTaken, hintUsed } = req.body;
+    const { questionId, selectedAnswer, timeTaken, hintUsed, excludeIds = [] } = req.body;
 
     const question = await Question.findById(questionId);
     if (!question) {
@@ -206,7 +221,8 @@ exports.submitAnswer = async (req, res) => {
       user: req.user.id,
     }).distinct("question");
 
-    const attemptedQuestions = attemptedRaw
+    const excludeObjIds = excludeIds.map(id => { try { return new mongoose.Types.ObjectId(id); } catch { return null; } }).filter(Boolean);
+    const attemptedQuestions = [...attemptedRaw, ...excludeObjIds]
       .map((id) => {
         try {
           return new mongoose.Types.ObjectId(id);
@@ -253,9 +269,7 @@ exports.submitAnswer = async (req, res) => {
       ]);
     }
 
-    if (nextQuestion.length === 0) {
-      nextQuestion = await Question.aggregate([{ $sample: { size: 1 } }]);
-    }
+    // Removed ultimate fallback for nextQuestion to avoid mixing subjects
 
     res.status(200).json({
       success: true,

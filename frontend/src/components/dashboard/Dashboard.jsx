@@ -31,6 +31,14 @@ const Dashboard = () => {
         fetch(`${BASE_URL}/dashboard/analytics`,  { headers: { Authorization: `Bearer ${token}` } }),
         fetch(`${BASE_URL}/dashboard/performance`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
+      
+      if (aRes.status === 401 || pRes.status === 401) {
+         localStorage.removeItem("token");
+         localStorage.removeItem("user");
+         window.location.href = "/login";
+         return;
+      }
+      
       const aData = await aRes.json();
       const pData = await pRes.json();
       const hRes  = await fetch(`${BASE_URL}/quiz/history`, { headers: { Authorization: `Bearer ${token}` } });
@@ -56,8 +64,8 @@ const Dashboard = () => {
     else alert(res.error);
   };
 
-  if (loading) return <div className="db-loading"><div className="db-spinner" /></div>;
-  if (!analytics) return <p className="db-empty">No analytics found.</p>;
+  if (loading) return <><Navbar /><div className="db-loading"><div className="db-spinner" /></div></>;
+  if (!analytics) return <><Navbar /><div className="db-empty" style={{textAlign: 'center', marginTop: '100px', color: 'white'}}><h2>Welcome to Adaptive Learning!</h2><p>You haven't taken any quizzes yet.</p><button onClick={() => navigate('/quiz')} style={{padding: '10px 20px', marginTop: '20px', cursor:'pointer', background: '#3b82f6', border: 'none', borderRadius: '5px', color: 'white'}}>Take a Quiz Now</button></div></>;
 
   /* ── chart data ─────────────────────────────────── */
   const subjects   = analytics.subjects?.map(s => s.subject)       || [];

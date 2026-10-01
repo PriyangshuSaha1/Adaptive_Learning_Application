@@ -316,6 +316,7 @@ const Quiz = () => {
           topic: selectedTopic,
           hintUsed: showHint,
           difficulty: cq.difficulty,
+          excludeIds: questions.map(q => q._id),
         }),
       });
       const data = await res.json();

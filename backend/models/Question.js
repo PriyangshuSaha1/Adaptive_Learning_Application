@@ -19,7 +19,8 @@ const questionSchema = new mongoose.Schema({
         }
     },
     correctAnswer: { type: Number, required: true, min: 0, max: 3 },
-    explanation: { type: String }
+    explanation: { type: String },
+    hint: { type: String }
 
 }, { timestamps: true });
 
